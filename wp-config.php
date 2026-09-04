@@ -1,9 +1,17 @@
 <?php
 /** Docker/Dokploy values come from the environment; local OSPanel defaults remain usable. */
-define('DB_NAME', getenv('WORDPRESS_DB_NAME') ?: 'suburbanrelocationmovers_clean');
-define('DB_USER', getenv('WORDPRESS_DB_USER') ?: 'root');
-define('DB_PASSWORD', getenv('WORDPRESS_DB_PASSWORD') !== false ? getenv('WORDPRESS_DB_PASSWORD') : '');
-define('DB_HOST', getenv('WORDPRESS_DB_HOST') ?: '127.0.0.1');
+function srs_config_env(array $names, $default = '') {
+    foreach ($names as $name) {
+        $value = getenv($name);
+        if ($value !== false && $value !== '') return $value;
+    }
+    return $default;
+}
+
+define('DB_NAME', srs_config_env(array('WORDPRESS_DB_NAME', 'DB_NAME', 'MYSQL_DATABASE', 'MARIADB_DATABASE'), 'suburbanrelocationmovers_clean'));
+define('DB_USER', srs_config_env(array('WORDPRESS_DB_USER', 'DB_USER', 'MYSQL_USER', 'MARIADB_USER'), 'root'));
+define('DB_PASSWORD', srs_config_env(array('WORDPRESS_DB_PASSWORD', 'DB_PASSWORD', 'MYSQL_PASSWORD', 'MARIADB_PASSWORD'), ''));
+define('DB_HOST', srs_config_env(array('WORDPRESS_DB_HOST', 'DB_HOST', 'MYSQL_HOST', 'MARIADB_HOST'), '127.0.0.1'));
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 

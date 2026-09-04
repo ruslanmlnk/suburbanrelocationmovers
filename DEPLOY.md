@@ -11,4 +11,6 @@
 4. Set the WordPress service's internal port to `80` and attach the domain in Dokploy.
 5. Deploy. The included database dump is imported only when the database volume is empty.
 
+If Dokploy has its own HTTP health check enabled, use `/wp-includes/images/blank.gif` instead of `/wp-login.php`. The static path verifies Apache without failing while MariaDB is still starting.
+
 Keep both named volumes during updates. Removing `database_data` deletes the WordPress database; removing `wordpress_uploads` deletes uploaded media added after deployment.

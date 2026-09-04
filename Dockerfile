@@ -1,6 +1,9 @@
 FROM wordpress:php8.3-apache
 
-RUN a2enmod rewrite expires headers
+COPY docker/apache/servername.conf /etc/apache2/conf-available/servername.conf
+
+RUN a2enmod rewrite expires headers \
+    && a2enconf servername
 
 COPY --chown=www-data:www-data . /var/www/html/
 
@@ -11,4 +14,4 @@ RUN find /var/www/html -type d -exec chmod 755 {} \; \
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
-    CMD curl --fail --silent http://127.0.0.1/wp-login.php > /dev/null || exit 1
+    CMD curl --fail --silent http://127.0.0.1/wp-includes/images/blank.gif > /dev/null || exit 1
