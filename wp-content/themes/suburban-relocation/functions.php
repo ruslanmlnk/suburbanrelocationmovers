@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SRS_THEME_VERSION', '1.1.7' );
+define( 'SRS_THEME_VERSION', '1.1.10' );
 
 /** Replace the former OSPanel origin in imported editable content on production. */
 function srs_replace_local_origin( $value ) {

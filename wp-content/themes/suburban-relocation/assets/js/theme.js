@@ -81,4 +81,45 @@
     });
     showSlide(0);
   });
+
+  /* Subtle, one-time entrance motion. Elements remain fully visible without JS. */
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    var revealItems = [];
+
+    function prepare(selector, variant, delay) {
+      document.querySelectorAll(selector).forEach(function (element, index) {
+        if (element.classList.contains('srs-reveal')) return;
+        element.classList.add('srs-reveal');
+        if (variant) element.classList.add('srs-reveal--' + variant);
+        element.style.setProperty('--srs-reveal-delay', Math.min(index * (delay || 0), 360) + 'ms');
+        revealItems.push(element);
+      });
+    }
+
+    prepare('.srs-hero-copy > *', '', 85);
+    prepare('.srs-hero-form', 'scale', 0);
+    prepare('.srs-trust-strip > div', '', 90);
+    prepare('.srs-section-head > *, .srs-process-copy, .srs-location-copy, .srs-review-intro, .srs-faq-grid > div, .srs-final-cta-inner > div', '', 90);
+    prepare('.srs-service-card, .srs-location-card, .srs-archive-card', '', 75);
+    prepare('.srs-steps > li', 'right', 90);
+    prepare('.srs-map-panel', 'scale', 0);
+    prepare('.srs-review-slider, .srs-faq-list > details', '', 80);
+    prepare('.srs-page-hero .srs-container > *, .srs-article-hero-inner > *, .srs-prose > *, .srs-article-content > *', '', 55);
+
+    document.documentElement.classList.add('srs-motion-ready');
+
+    var revealObserver = new IntersectionObserver(function (entries, observer) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -9% 0px', threshold: 0.08 });
+
+    revealItems.forEach(function (element) {
+      revealObserver.observe(element);
+    });
+  }
 }());
