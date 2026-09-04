@@ -1,0 +1,38 @@
+services:
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-suburbanrelocation}
+      WORDPRESS_DB_USER: ${DB_USER:-suburbanrelocation}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in Dokploy}
+      WORDPRESS_URL: ${WORDPRESS_URL:?Set WORDPRESS_URL, for example https://example.com}
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - wordpress_uploads:/var/www/html/wp-content/uploads
+
+  database:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-suburbanrelocation}
+      MARIADB_USER: ${DB_USER:-suburbanrelocation}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in Dokploy}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD in Dokploy}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - database_data:/var/lib/mysql
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/10-wordpress.sql:ro
+
+volumes:
+  database_data:
+  wordpress_uploads:

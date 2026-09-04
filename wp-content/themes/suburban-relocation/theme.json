@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "820px",
+      "wideSize": "1180px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "palette": [
+        { "slug": "navy", "name": "Navy", "color": "#10243b" },
+        { "slug": "blue", "name": "Blue", "color": "#1f5f9d" },
+        { "slug": "coral", "name": "Coral", "color": "#e94b45" },
+        { "slug": "ink", "name": "Ink", "color": "#102136" },
+        { "slug": "mist", "name": "Mist", "color": "#f3f6f9" },
+        { "slug": "white", "name": "White", "color": "#ffffff" }
+      ]
+    },
+    "spacing": {
+      "units": ["px", "rem", "vw", "%"],
+      "spacingSizes": [
+        { "slug": "20", "size": "12px", "name": "XS" },
+        { "slug": "30", "size": "20px", "name": "S" },
+        { "slug": "40", "size": "32px", "name": "M" },
+        { "slug": "50", "size": "56px", "name": "L" },
+        { "slug": "60", "size": "96px", "name": "XL" }
+      ]
+    },
+    "typography": {
+      "fluid": true,
+      "fontFamilies": [
+        { "slug": "sans", "name": "System Sans", "fontFamily": "Arial, Helvetica, sans-serif" }
+      ],
+      "fontSizes": [
+        { "slug": "small", "size": "14px", "name": "Small" },
+        { "slug": "medium", "size": "18px", "name": "Medium" },
+        { "slug": "large", "size": "28px", "name": "Large" },
+        { "slug": "x-large", "size": "clamp(38px, 5vw, 68px)", "name": "Display" }
+      ]
+    }
+  },
+  "styles": {
+    "color": { "background": "#f7f8fa", "text": "#102136" },
+    "typography": { "fontFamily": "var(--wp--preset--font-family--sans)", "lineHeight": "1.65" },
+    "elements": {
+      "button": {
+        "color": { "background": "#1f5f9d", "text": "#ffffff" },
+        "border": { "radius": "999px" },
+        "typography": { "fontWeight": "700" }
+      },
+      "heading": {
+        "color": { "text": "#102136" },
+        "typography": { "fontWeight": "800", "lineHeight": "1.1" }
+      },
+      "link": { "color": { "text": "#1f5f9d" } }
+    }
+  }
+}

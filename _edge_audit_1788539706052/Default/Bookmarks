@@ -1,0 +1,61 @@
+{
+   "checksum": "2b0fffee1c8489c43b7f65219e825cb8",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13433013306374132",
+            "date_last_used": "0",
+            "guid": "739a9257-b216-4bd6-91d4-23828e777b55",
+            "id": "7",
+            "name": "Booking.com",
+            "show_icon": false,
+            "source": "oem_preload",
+            "type": "url",
+            "url": "https://s3.amazonaws.com/amundsen/redirect/19q2/booking.html?utm_source=win32&utm_medium=favorite",
+            "visit_count": 0
+         } ],
+         "date_added": "13433013306248136",
+         "date_last_used": "0",
+         "date_modified": "13433013306374132",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Панель уподобань",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13433013306248136",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Інші вподобання",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13433013306248136",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Уподобання на мобільному пристрої",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "workspaces_v2": {
+         "children": [  ],
+         "date_added": "13433013306248136",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "75aa6670-344f-549d-b742-660f029506ab",
+         "id": "5",
+         "name": "Робочі області",
+         "source": "unknown",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}

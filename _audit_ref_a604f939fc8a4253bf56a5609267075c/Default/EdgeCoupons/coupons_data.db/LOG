@@ -1,0 +1,5 @@
+2026/09/04-18:48:02.187 4e18 Creating DB C:\OSPanel\domains\suburbanrelocationmovers\_audit_ref_a604f939fc8a4253bf56a5609267075c\Default\EdgeCoupons/coupons_data.db since it was missing.
+2026/09/04-18:48:02.238 4e18 Reusing MANIFEST C:\OSPanel\domains\suburbanrelocationmovers\_audit_ref_a604f939fc8a4253bf56a5609267075c\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/09/04-18:48:03.394 683c Level-0 table #5: started
+2026/09/04-18:48:03.398 683c Level-0 table #5: 683273 bytes OK
+2026/09/04-18:48:03.399 683c Delete type=0 #3

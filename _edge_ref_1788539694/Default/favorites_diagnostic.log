@@ -1,0 +1,18 @@
+2026-09-04 16:34:55.353: [INFO] CurrentProfilePath: C:\OSPanel\domains\suburbanrelocationmovers\_edge_ref_1788539694\Default
+2026-09-04 16:34:55.353: [INFO] Profiles total count: 1
+2026-09-04 16:34:55.353: [INFO] Profile: name=Профіль 1 path=C:\OSPanel\domains\suburbanrelocationmovers\_edge_ref_1788539694\Default lastActive=2026-09-04T16:34:55.325Z
+2026-09-04 16:34:55.353: [INFO] LastUsedProfileDir: C:\OSPanel\domains\suburbanrelocationmovers\_edge_ref_1788539694\Default
+2026-09-04 16:34:55.353: [INFO] MostRecentlyActiveProfile: name=Профіль 1 path=C:\OSPanel\domains\suburbanrelocationmovers\_edge_ref_1788539694\Default lastActive=2026-09-04T16:34:55.325Z
+2026-09-04 16:34:55.353: [INFO] OnDoneLoading sync enabled: 0
+2026-09-04 16:34:55.353: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-09-04 16:34:55.353: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-09-04 16:34:55.353: [INFO] BookmarksSnapshot Startup total=1 bar=1 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-04 16:34:55.391: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-04 16:34:55.548: [INFO] VisibilityChanged: 0
+2026-09-04 16:34:56.271: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-04 16:34:56.273: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-04 16:34:56.276: [INFO] Primary account changed.
+2026-09-04 16:34:56.276: [INFO] OnPrimaryAccountChanged PrimaryAccountChangeEvent::Type::kSet
+2026-09-04 16:34:56.278: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-04 16:34:56.279: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-04 16:35:05.447: [INFO] BookmarksSnapshot Shutdown total=1 bar=1 other=0 mobile=0 showBar=0 showBarNTP=1
