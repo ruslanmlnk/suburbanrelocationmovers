@@ -5,11 +5,17 @@ COPY docker/apache/servername.conf /etc/apache2/conf-available/servername.conf
 RUN a2enmod rewrite expires headers \
     && a2enconf servername
 
-COPY --chown=www-data:www-data . /var/www/html/
+COPY --chown=www-data:www-data . /usr/src/wordpress/
+COPY docker/wordpress/site-entrypoint.sh /usr/local/bin/site-entrypoint.sh
 
-RUN find /var/www/html -type d -exec chmod 755 {} \; \
-    && find /var/www/html -type f -exec chmod 644 {} \; \
-    && chmod 640 /var/www/html/wp-config.php
+RUN find /usr/src/wordpress -type d -exec chmod 755 {} \; \
+    && find /usr/src/wordpress -type f -exec chmod 644 {} \; \
+    && chmod 640 /usr/src/wordpress/wp-config.php \
+    && sed -i 's/\r$//' /usr/local/bin/site-entrypoint.sh \
+    && chmod 755 /usr/local/bin/site-entrypoint.sh
+
+ENTRYPOINT ["site-entrypoint.sh"]
+CMD ["apache2-foreground"]
 
 EXPOSE 80
 

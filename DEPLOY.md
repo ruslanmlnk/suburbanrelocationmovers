@@ -12,6 +12,7 @@
 5. Deploy. The included database dump is imported only when the database volume is empty.
 
 The WordPress image is configured with `no_cache: true`, so each Dokploy deployment rebuilds the site files from the selected Git commit.
+At container startup the application code is refreshed from the image into WordPress's runtime directory. The separately mounted uploads volume is merged and retained.
 
 If Dokploy has its own HTTP health check enabled, use `/wp-includes/images/blank.gif` instead of `/wp-login.php`. The static path verifies Apache without failing while MariaDB is still starting.
 
