@@ -71,6 +71,8 @@ function srs_clean_legacy_node( DOMElement $node, string $slug, array &$images, 
 	}
 
 	$html = $node->ownerDocument->saveHTML( $node );
+	// DOMDocument URL-encodes braces inside src attributes.
+	$html = str_ireplace( '%7B%7Btheme_uri%7D%7D', '{{theme_uri}}', $html );
 	return trim( preg_replace( '/\s+$/m', '', $html ) );
 }
 

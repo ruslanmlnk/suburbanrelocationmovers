@@ -3,7 +3,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'SRS_LEGACY_CONTENT_VERSION', '2026-09-05-1' );
+define( 'SRS_LEGACY_CONTENT_VERSION', '2026-09-05-2' );
 
 function srs_import_archived_content() {
 	if ( SRS_LEGACY_CONTENT_VERSION === get_option( 'srs_legacy_content_version' ) ) return;
@@ -24,7 +24,11 @@ function srs_import_archived_content() {
 		$post = get_page_by_path( $slug, OBJECT, $post_type );
 		if ( ! $post && 'srs_city' === $post_type ) $post = get_page_by_path( $slug, OBJECT, 'srs_location' );
 		if ( ! $post ) continue;
-		$content = str_replace( '{{theme_uri}}', get_template_directory_uri(), $entry['content'] );
+		$content = str_replace(
+			array( '{{theme_uri}}', '%7B%7Btheme_uri%7D%7D', '%7b%7btheme_uri%7d%7d' ),
+			get_template_directory_uri(),
+			$entry['content']
+		);
 		wp_update_post( array( 'ID' => $post->ID, 'post_type' => $post_type, 'post_content' => wp_kses_post( $content ) ) );
 		update_post_meta( $post->ID, '_srs_legacy_source_url', esc_url_raw( $entry['source'] ?? '' ) );
 		update_post_meta( $post->ID, '_srs_legacy_url', sanitize_text_field( $entry['legacy_url'] ?? '' ) );

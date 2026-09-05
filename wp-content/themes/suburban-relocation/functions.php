@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SRS_THEME_VERSION', '1.2.0' );
+define( 'SRS_THEME_VERSION', '1.2.1' );
 
 /** Replace the former OSPanel origin in imported editable content on production. */
 function srs_replace_local_origin( $value ) {
@@ -349,11 +349,13 @@ function srs_legacy_url_map() {
 /** Preserve the exact public URLs used by the approved site and the historic SEO structure. */
 function srs_reference_routes() {
 	$state_slugs = array( 'maryland', 'washington-dc', 'virginia', 'colorado', 'california', 'texas' );
-	add_rewrite_rule( '^([^/]+)-movers\.html$', 'index.php?post_type=srs_city&name=$matches[1]', 'top' );
 	foreach ( srs_legacy_url_map() as $url => $target ) {
 		$post_type = ( 'srs_location' === $target[0] && ! in_array( $target[1], $state_slugs, true ) ) ? 'srs_city' : $target[0];
 		add_rewrite_rule( '^' . preg_quote( $url, '/' ) . '$', 'index.php?post_type=' . $post_type . '&name=' . $target[1], 'top' );
 	}
+	/* Keep the generic city fallback after exact historic routes. Otherwise
+	 * washington-dc-movers.html is mistaken for a city instead of the DC state page. */
+	add_rewrite_rule( '^([^/]+)-movers\.html$', 'index.php?post_type=srs_city&name=$matches[1]', 'top' );
 	foreach ( array( 'testimonials', 'moving-tips', 'contact' ) as $slug ) {
 		$file = 'moving-tips' === $slug ? 'tip.html' : ( 'contact' === $slug ? 'contact-us.html' : 'testimonials.html' );
 		add_rewrite_rule( '^' . preg_quote( $file, '/' ) . '$', 'index.php?pagename=' . $slug, 'top' );
