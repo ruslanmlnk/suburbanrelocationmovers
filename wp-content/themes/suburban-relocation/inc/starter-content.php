@@ -122,7 +122,7 @@ function srs_import_starter_content() {
 			}
 		}
 		if ( $post_id && ! is_wp_error( $post_id ) ) {
-			$location_ids[] = $post_id;
+			$location_ids[ $location['slug'] ] = $post_id;
 			srs_set_location_meta( $post_id, $location );
 			srs_set_meta_if_empty( $post_id, '_srs_featured', '1' );
 			if ( ! has_post_thumbnail( $post_id ) && ! empty( $image_ids['hero-moving.png'] ) ) {
@@ -132,7 +132,7 @@ function srs_import_starter_content() {
 	}
 
 	foreach ( srs_starter_city_locations() as $index => $city ) {
-		$existing = srs_find_post_by_slug( $city[0], 'srs_location' );
+		$existing = srs_find_post_by_slug( $city[0], 'srs_city' );
 		$city_name = str_replace( ' Movers', '', $city[1] );
 		if ( $existing ) {
 			$post_id = $existing->ID;
@@ -148,7 +148,7 @@ function srs_import_starter_content() {
 			);
 			$post_id = wp_insert_post(
 				array(
-					'post_type'    => 'srs_location',
+					'post_type'    => 'srs_city',
 					'post_status'  => 'publish',
 					'post_title'   => $city[1],
 					'post_name'    => $city[0],
@@ -167,7 +167,8 @@ function srs_import_starter_content() {
 				'address' => 'Serving ' . $city_name . ' and surrounding communities', 'area' => 'Local and long-distance routes from ' . $city_name,
 			);
 			srs_set_location_meta( $post_id, $meta_location );
-			srs_set_meta_if_empty( $post_id, '_srs_featured', '0' );
+			$state_slug = srs_state_slug_for_city( $city[0] );
+			if ( $state_slug && isset( $location_ids[ $state_slug ] ) ) srs_set_meta_if_empty( $post_id, '_srs_parent_state', $location_ids[ $state_slug ] );
 		}
 		unset( $city_location );
 	}

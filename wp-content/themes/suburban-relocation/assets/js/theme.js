@@ -103,6 +103,7 @@
     prepare('.srs-trust-strip > div', '', 90);
     prepare('.srs-section-head > *, .srs-process-copy, .srs-location-copy, .srs-review-intro, .srs-faq-grid > div, .srs-final-cta-inner > div', '', 90);
     prepare('.srs-service-card, .srs-location-card, .srs-archive-card', '', 75);
+    prepare('.srs-city-card', '', 55);
     prepare('.srs-steps > li', 'right', 90);
     prepare('.srs-map-panel', 'scale', 0);
     prepare('.srs-review-slider, .srs-faq-list > details', '', 80);

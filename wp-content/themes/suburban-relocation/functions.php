@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SRS_THEME_VERSION', '1.1.10' );
+define( 'SRS_THEME_VERSION', '1.2.0' );
 
 /** Replace the former OSPanel origin in imported editable content on production. */
 function srs_replace_local_origin( $value ) {
@@ -36,6 +36,7 @@ require_once get_template_directory() . '/inc/home-settings.php';
 require_once get_template_directory() . '/inc/shortcodes.php';
 require_once get_template_directory() . '/inc/form-handler.php';
 require_once get_template_directory() . '/inc/starter-content.php';
+require_once get_template_directory() . '/inc/legacy-content.php';
 require_once get_template_directory() . '/inc/patterns.php';
 
 /** Configure theme features. */
@@ -78,7 +79,7 @@ add_action( 'wp_enqueue_scripts', 'srs_enqueue_assets' );
 
 /** Add useful body classes. */
 function srs_body_classes( $classes ) {
-	if ( is_singular( array( 'srs_service', 'srs_location' ) ) ) {
+	if ( is_singular( array( 'srs_service', 'srs_location', 'srs_city' ) ) ) {
 		$classes[] = 'srs-article-page';
 	}
 	return $classes;
@@ -113,6 +114,7 @@ function srs_icon( $name ) {
 		'shield-check' => '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
 		'headphones' => '<path d="M4 14a8 8 0 0 1 16 0"/><path d="M18 19c0 1.7-1.3 3-3 3h-1"/><path d="M4 14v4a2 2 0 0 0 2 2h1v-8H6a2 2 0 0 0-2 2Z"/><path d="M20 14v4a2 2 0 0 1-2 2h-1v-8h1a2 2 0 0 1 2 2Z"/>',
 		'check' => '<path d="M20 6 9 17l-5-5"/>',
+		'map-pin' => '<path d="M20 10c0 5-5.5 11-8 12-2.5-1-8-7-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
 		'truck' => '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
 		'home' => '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
 		'building' => '<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>',
@@ -144,7 +146,7 @@ function srs_featured_image_url( $post_id = 0, $size = 'large' ) {
 		return $url;
 	}
 
-	if ( 'srs_location' === get_post_type( $post_id ) ) {
+	if ( in_array( get_post_type( $post_id ), array( 'srs_location', 'srs_city' ), true ) ) {
 		return get_theme_file_uri( 'assets/images/hero-moving.png' );
 	}
 
@@ -346,7 +348,12 @@ function srs_legacy_url_map() {
 
 /** Preserve the exact public URLs used by the approved site and the historic SEO structure. */
 function srs_reference_routes() {
-	foreach ( srs_legacy_url_map() as $url => $target ) add_rewrite_rule( '^' . preg_quote( $url, '/' ) . '$', 'index.php?post_type=' . $target[0] . '&name=' . $target[1], 'top' );
+	$state_slugs = array( 'maryland', 'washington-dc', 'virginia', 'colorado', 'california', 'texas' );
+	add_rewrite_rule( '^([^/]+)-movers\.html$', 'index.php?post_type=srs_city&name=$matches[1]', 'top' );
+	foreach ( srs_legacy_url_map() as $url => $target ) {
+		$post_type = ( 'srs_location' === $target[0] && ! in_array( $target[1], $state_slugs, true ) ) ? 'srs_city' : $target[0];
+		add_rewrite_rule( '^' . preg_quote( $url, '/' ) . '$', 'index.php?post_type=' . $post_type . '&name=' . $target[1], 'top' );
+	}
 	foreach ( array( 'testimonials', 'moving-tips', 'contact' ) as $slug ) {
 		$file = 'moving-tips' === $slug ? 'tip.html' : ( 'contact' === $slug ? 'contact-us.html' : 'testimonials.html' );
 		add_rewrite_rule( '^' . preg_quote( $file, '/' ) . '$', 'index.php?pagename=' . $slug, 'top' );
@@ -365,7 +372,9 @@ function srs_reference_permalink( $url, $post ) {
 	foreach ( srs_legacy_url_map() as $file => $target ) {
 		if ( ! isset( $map[ $target[1] ] ) ) $map[ $target[1] ] = $file;
 	}
-	return isset( $map[ $post->post_name ] ) ? home_url( '/' . $map[ $post->post_name ] ) : $url;
+	if ( isset( $map[ $post->post_name ] ) ) return home_url( '/' . $map[ $post->post_name ] );
+	if ( 'srs_city' === $post->post_type ) return home_url( '/' . $post->post_name . '-movers.html' );
+	return $url;
 }
 add_filter( 'post_type_link', 'srs_reference_permalink', 10, 2 );
 

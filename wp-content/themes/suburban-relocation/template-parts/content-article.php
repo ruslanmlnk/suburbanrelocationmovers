@@ -1,12 +1,15 @@
 <?php
 /** Shared service/location article layout. */
-$is_location = 'srs_location' === get_post_type();
+$is_state    = 'srs_location' === get_post_type();
+$is_city     = 'srs_city' === get_post_type();
+$is_location = $is_state || $is_city;
 $kicker      = srs_meta( '_srs_kicker', get_the_ID(), $is_location ? __( 'Local moving specialists', 'suburban-relocation' ) : __( 'Professional moving service', 'suburban-relocation' ) );
+$parent_state_id = $is_city ? absint( get_post_meta( get_the_ID(), '_srs_parent_state', true ) ) : 0;
 ?>
 <section class="srs-article-hero" style="--srs-article-image:url('<?php echo esc_url( srs_featured_image_url( get_the_ID(), 'full' ) ); ?>')">
 	<div class="srs-article-shade"></div>
 	<div class="srs-container srs-article-hero-inner">
-		<nav class="srs-breadcrumbs" aria-label="<?php esc_attr_e( 'Breadcrumb', 'suburban-relocation' ); ?>"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'suburban-relocation' ); ?></a><span>/</span><a href="<?php echo esc_url( get_post_type_archive_link( get_post_type() ) ); ?>"><?php echo esc_html( $is_location ? __( 'Locations', 'suburban-relocation' ) : __( 'Services', 'suburban-relocation' ) ); ?></a></nav>
+		<nav class="srs-breadcrumbs" aria-label="<?php esc_attr_e( 'Breadcrumb', 'suburban-relocation' ); ?>"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'suburban-relocation' ); ?></a><span>/</span><?php if ( $is_city && $parent_state_id ) : ?><a href="<?php echo esc_url( get_permalink( $parent_state_id ) ); ?>"><?php echo esc_html( get_the_title( $parent_state_id ) ); ?></a><?php else : ?><a href="<?php echo esc_url( get_post_type_archive_link( get_post_type() ) ); ?>"><?php echo esc_html( $is_location ? __( 'Locations', 'suburban-relocation' ) : __( 'Services', 'suburban-relocation' ) ); ?></a><?php endif; ?></nav>
 		<p class="srs-eyebrow"><?php echo esc_html( $kicker ); ?></p>
 		<h1><?php the_title(); ?></h1>
 		<?php if ( has_excerpt() ) : ?><p class="srs-article-intro"><?php echo esc_html( get_the_excerpt() ); ?></p><?php endif; ?>
@@ -27,6 +30,19 @@ $kicker      = srs_meta( '_srs_kicker', get_the_ID(), $is_location ? __( 'Local 
 		</aside>
 	</div>
 </section>
+<?php if ( $is_state ) :
+	$cities = get_posts( array( 'post_type' => 'srs_city', 'post_status' => 'publish', 'posts_per_page' => -1, 'meta_key' => '_srs_parent_state', 'meta_value' => get_the_ID(), 'orderby' => 'title', 'order' => 'ASC' ) );
+	if ( $cities ) : ?>
+	<section class="srs-state-cities" aria-labelledby="srs-state-cities-title">
+		<div class="srs-container">
+			<div class="srs-state-cities-head"><div><p class="srs-eyebrow dark"><?php esc_html_e( 'Cities we serve', 'suburban-relocation' ); ?></p><h2 id="srs-state-cities-title"><?php echo esc_html( sprintf( __( 'Moving services across %s', 'suburban-relocation' ), preg_replace( '/\s+Movers$/', '', get_the_title() ) ) ); ?></h2></div><p><?php esc_html_e( 'Choose your city for local moving information, service details and a free quote.', 'suburban-relocation' ); ?></p></div>
+			<div class="srs-state-cities-grid">
+				<?php foreach ( $cities as $city ) : ?><a class="srs-city-card" href="<?php echo esc_url( get_permalink( $city ) ); ?>"><span class="srs-city-card-icon"><?php echo srs_icon( 'map-pin' ); ?></span><span><strong><?php echo esc_html( preg_replace( '/\s+Movers$/', '', $city->post_title ) ); ?></strong><small><?php echo esc_html( get_post_meta( $city->ID, '_srs_service_area', true ) ?: __( 'Local and long-distance moving', 'suburban-relocation' ) ); ?></small></span><?php echo srs_icon( 'arrow-right' ); ?></a><?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+	<?php endif;
+endif; ?>
 <section class="srs-benefits">
 	<div class="srs-container">
 		<div><strong><?php esc_html_e( 'Careful handling', 'suburban-relocation' ); ?></strong><small><?php esc_html_e( 'Protected from door to door', 'suburban-relocation' ); ?></small></div>

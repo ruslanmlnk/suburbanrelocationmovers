@@ -6,6 +6,8 @@ Dockerfile*
 docker-compose*.yml
 docker-compose*.yaml
 docker/db
+tools
+.wayback-cache
 *_profile*
 _audit*
 _edge*
