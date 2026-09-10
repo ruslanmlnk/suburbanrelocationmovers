@@ -7,6 +7,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function srs_home_defaults() {
 	return array(
+		'hero_phone_label'  => 'Speak with a moving expert',
+		'process_button'    => 'Start planning',
+		'locations_button'  => 'Check your route',
+		'locations_map_1'   => 'Maryland',
+		'locations_map_2'   => 'Washington, DC',
+		'locations_map_3'   => 'Virginia',
+		'locations_area_1'  => 'Maryland',
+		'locations_area_2'  => 'Washington, DC',
+		'locations_area_3'  => 'Northern Virginia',
+		'locations_area_4'  => 'Interstate moves',
+		'reviews_caption'   => 'Customer-first service',
+		'faq_call_label'    => 'Call',
 		'hero_kicker'       => 'Moving made refreshingly clear',
 		'hero_title'        => 'A smoother move starts with a better plan.',
 		'hero_text'         => 'Personal move coordination, careful crews and dependable service for homes and businesses—nearby or across the country.',
@@ -78,6 +90,7 @@ function srs_get_home_option( $key ) {
 }
 
 function srs_home_settings_menu() {
+	add_menu_page( 'Главная страница', 'Главная страница', 'edit_theme_options', 'srs-home-sections', 'srs_render_home_settings', 'dashicons-admin-home', 21 );
 	add_theme_page(
 		__( 'Home Sections', 'suburban-relocation' ),
 		__( 'Home Sections', 'suburban-relocation' ),
@@ -93,12 +106,23 @@ function srs_register_home_settings() {
 }
 add_action( 'admin_init', 'srs_register_home_settings' );
 
+add_filter( 'option_page_capability_srs_home_settings', function() { return 'edit_theme_options'; } );
+
+add_filter( 'get_edit_post_link', function( $link, $post_id ) {
+	if ( (int) get_option( 'page_on_front' ) === (int) $post_id && current_user_can( 'edit_theme_options' ) ) {
+		return admin_url( 'admin.php?page=srs-home-sections' );
+	}
+	return $link;
+}, 10, 2 );
+
 function srs_sanitize_home_settings( $input ) {
 	$defaults = srs_home_defaults();
+	$input    = is_array( $input ) ? $input : array();
 	$output   = array();
 	foreach ( $defaults as $key => $default ) {
+		if ( isset( $input[ $key ] ) && ! is_scalar( $input[ $key ] ) ) { unset( $input[ $key ] ); }
 		if ( false !== strpos( $key, '_enabled' ) ) {
-			$output[ $key ] = isset( $input[ $key ] ) ? '1' : '0';
+			$output[ $key ] = isset( $input[ $key ] ) && '1' === (string) $input[ $key ] ? '1' : '0';
 		} elseif ( 'hero_image' === $key ) {
 			$output[ $key ] = isset( $input[ $key ] ) ? esc_url_raw( $input[ $key ] ) : $default;
 		} elseif ( false !== strpos( $key, '_text' ) || false !== strpos( $key, '_quote' ) || false !== strpos( $key, '_answer' ) ) {
@@ -137,36 +161,41 @@ function srs_render_home_settings() {
 	?>
 	<div class="wrap srs-home-admin">
 		<h1><?php esc_html_e( 'Home Page Sections', 'suburban-relocation' ); ?></h1>
-		<p><?php esc_html_e( 'Edit the visible homepage content here. The theme keeps the layout fixed and professional while you change every text and image.', 'suburban-relocation' ); ?></p>
+		<p>Выберите секцию и отредактируйте её тексты. После изменений нажмите «Сохранить изменения».</p>
+		<?php settings_errors(); ?>
+		<p><a class="button" href="<?php echo esc_url( home_url( '/' ) ); ?>" target="_blank" rel="noopener">Открыть главную ↗</a> <a class="button" href="<?php echo esc_url( admin_url( 'themes.php?page=srs-company-details' ) ); ?>">Телефон и контакты</a></p>
 		<form action="options.php" method="post">
 			<?php settings_fields( 'srs_home_settings' ); ?>
+			<nav class="srs-section-nav" aria-label="Секции главной страницы"></nav>
 			<div class="srs-admin-sections">
-				<section><h2>Hero</h2><?php srs_home_field( 'hero_kicker', 'Kicker' ); srs_home_field( 'hero_title', 'Main heading' ); srs_home_field( 'hero_text', 'Description', 'textarea' ); srs_home_field( 'hero_button', 'Button text' ); ?><label class="srs-admin-field"><span>Background image</span><span class="srs-media-row"><input id="srs_hero_image" type="url" name="srs_home_sections[hero_image]" value="<?php echo esc_attr( srs_get_home_option( 'hero_image' ) ); ?>"><button class="button srs-upload-image" type="button" data-target="#srs_hero_image">Choose image</button></span></label></section>
+				<section><h2>Hero</h2><?php srs_home_field( 'hero_kicker', 'Kicker' ); srs_home_field( 'hero_title', 'Main heading' ); srs_home_field( 'hero_text', 'Description', 'textarea' ); srs_home_field( 'hero_button', 'Button text' ); srs_home_field( 'hero_phone_label', 'Phone caption' ); ?><label class="srs-admin-field"><span>Background image</span><span class="srs-media-row"><input id="srs_hero_image" type="url" name="srs_home_sections[hero_image]" value="<?php echo esc_attr( srs_get_home_option( 'hero_image' ) ); ?>"><button class="button srs-upload-image" type="button" data-target="#srs_hero_image">Choose image</button></span></label></section>
 				<section><h2>Quote form</h2><?php srs_home_field( 'form_kicker', 'Kicker' ); srs_home_field( 'form_title', 'Heading' ); srs_home_field( 'form_text', 'Description', 'textarea' ); srs_home_field( 'form_button', 'Submit button' ); ?></section>
 				<section><h2>Trust strip</h2><?php srs_home_toggle( 'trust_enabled' ); for ( $i = 1; $i <= 3; $i++ ) { echo '<h3>Item ' . esc_html( $i ) . '</h3>'; srs_home_field( 'trust_' . $i . '_title', 'Title' ); srs_home_field( 'trust_' . $i . '_text', 'Text' ); } ?></section>
-				<section><h2>Services</h2><?php srs_home_toggle( 'services_enabled' ); srs_home_field( 'services_kicker', 'Kicker' ); srs_home_field( 'services_title', 'Heading' ); srs_home_field( 'services_text', 'Description', 'textarea' ); ?><p class="description">Service cards are managed under <strong>Services</strong>.</p></section>
-				<section><h2>Process</h2><?php srs_home_toggle( 'process_enabled' ); srs_home_field( 'process_kicker', 'Kicker' ); srs_home_field( 'process_title', 'Heading' ); srs_home_field( 'process_text', 'Description', 'textarea' ); for ( $i = 1; $i <= 3; $i++ ) { echo '<h3>Step ' . esc_html( $i ) . '</h3>'; srs_home_field( 'step_' . $i . '_title', 'Title' ); srs_home_field( 'step_' . $i . '_text', 'Text', 'textarea' ); } ?></section>
-				<section><h2>Locations</h2><?php srs_home_toggle( 'locations_enabled' ); srs_home_field( 'locations_kicker', 'Kicker' ); srs_home_field( 'locations_title', 'Heading' ); srs_home_field( 'locations_text', 'Description', 'textarea' ); ?><p class="description">Cards are managed under <strong>Locations</strong>. Use the “Show on home” checkbox in a location.</p></section>
-				<section><h2>Reviews</h2><?php srs_home_toggle( 'reviews_enabled' ); srs_home_field( 'reviews_kicker', 'Kicker' ); srs_home_field( 'reviews_title', 'Heading' ); srs_home_field( 'reviews_rating', 'Rating' ); for ( $i = 1; $i <= 3; $i++ ) { echo '<h3>Review ' . esc_html( $i ) . '</h3>'; srs_home_field( 'review_' . $i . '_quote', 'Quote', 'textarea' ); srs_home_field( 'review_' . $i . '_name', 'Customer' ); srs_home_field( 'review_' . $i . '_detail', 'Move details' ); } ?></section>
-				<section><h2>FAQ</h2><?php srs_home_toggle( 'faq_enabled' ); srs_home_field( 'faq_kicker', 'Kicker' ); srs_home_field( 'faq_title', 'Heading' ); srs_home_field( 'faq_text', 'Description', 'textarea' ); for ( $i = 1; $i <= 3; $i++ ) { echo '<h3>Question ' . esc_html( $i ) . '</h3>'; srs_home_field( 'faq_' . $i . '_question', 'Question' ); srs_home_field( 'faq_' . $i . '_answer', 'Answer', 'textarea' ); } ?></section>
+				<section><h2>Services</h2><?php srs_home_toggle( 'services_enabled' ); srs_home_field( 'services_kicker', 'Kicker' ); srs_home_field( 'services_title', 'Heading' ); srs_home_field( 'services_text', 'Description', 'textarea' ); ?><p class="description">Тексты карточек: <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=srs_service' ) ); ?>">Services → выберите услугу</a> (название и краткое описание).</p></section>
+				<section><h2>Process</h2><?php srs_home_toggle( 'process_enabled' ); srs_home_field( 'process_kicker', 'Kicker' ); srs_home_field( 'process_title', 'Heading' ); srs_home_field( 'process_text', 'Description', 'textarea' ); srs_home_field( 'process_button', 'Button text' ); for ( $i = 1; $i <= 3; $i++ ) { echo '<h3>Step ' . esc_html( $i ) . '</h3>'; srs_home_field( 'step_' . $i . '_title', 'Title' ); srs_home_field( 'step_' . $i . '_text', 'Text', 'textarea' ); } ?></section>
+				<section><h2>Locations</h2><?php srs_home_toggle( 'locations_enabled' ); srs_home_field( 'locations_kicker', 'Kicker' ); srs_home_field( 'locations_title', 'Heading' ); srs_home_field( 'locations_text', 'Description', 'textarea' ); srs_home_field( 'locations_button', 'Button text' ); for ( $i = 1; $i <= 3; $i++ ) { srs_home_field( 'locations_map_' . $i, 'Map label ' . $i ); } for ( $i = 1; $i <= 4; $i++ ) { srs_home_field( 'locations_area_' . $i, 'Service area ' . $i ); } ?><p class="description">Названия на карте и список регионов редактируются выше.</p></section>
+				<section><h2>Reviews</h2><?php srs_home_toggle( 'reviews_enabled' ); srs_home_field( 'reviews_kicker', 'Kicker' ); srs_home_field( 'reviews_title', 'Heading' ); srs_home_field( 'reviews_rating', 'Rating' ); srs_home_field( 'reviews_caption', 'Rating caption' ); for ( $i = 1; $i <= 3; $i++ ) { echo '<h3>Review ' . esc_html( $i ) . '</h3>'; srs_home_field( 'review_' . $i . '_quote', 'Quote', 'textarea' ); srs_home_field( 'review_' . $i . '_name', 'Customer' ); srs_home_field( 'review_' . $i . '_detail', 'Move details' ); } ?></section>
+				<section><h2>FAQ</h2><?php srs_home_toggle( 'faq_enabled' ); srs_home_field( 'faq_kicker', 'Kicker' ); srs_home_field( 'faq_title', 'Heading' ); srs_home_field( 'faq_text', 'Description', 'textarea' ); srs_home_field( 'faq_call_label', 'Text before phone number' ); for ( $i = 1; $i <= 3; $i++ ) { echo '<h3>Question ' . esc_html( $i ) . '</h3>'; srs_home_field( 'faq_' . $i . '_question', 'Question' ); srs_home_field( 'faq_' . $i . '_answer', 'Answer', 'textarea' ); } ?></section>
 				<section><h2>Final CTA</h2><?php srs_home_toggle( 'cta_enabled' ); srs_home_field( 'cta_kicker', 'Kicker' ); srs_home_field( 'cta_title', 'Heading' ); srs_home_field( 'cta_button', 'Button text' ); ?></section>
 			</div>
-			<?php submit_button( __( 'Save home page', 'suburban-relocation' ) ); ?>
+			<div class="srs-save-bar"><?php submit_button( 'Сохранить изменения' ); ?><span class="srs-save-status" role="status" aria-live="polite"></span></div>
 		</form>
 	</div>
 	<style>
 	.srs-home-admin{max-width:1180px}.srs-admin-sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:24px}.srs-admin-sections section{padding:22px;border:1px solid #dcdcde;border-radius:12px;background:#fff}.srs-admin-sections h2{margin-top:0;padding-bottom:12px;border-bottom:1px solid #eee}.srs-admin-sections h3{margin:22px 0 8px;color:#1f5f9d}.srs-admin-field{display:block;margin:12px 0}.srs-admin-field>span:first-child{display:block;margin-bottom:5px;font-weight:600}.srs-admin-field input,.srs-admin-field textarea{width:100%}.srs-admin-toggle{display:inline-block;margin:0 0 12px;padding:8px 10px;border-radius:6px;background:#eef4fa;font-weight:600}.srs-media-row{display:flex;gap:8px}.srs-media-row input{flex:1}@media(max-width:850px){.srs-admin-sections{grid-template-columns:1fr}}
 	</style>
 	<script>
-	jQuery(function($){$('.srs-upload-image').on('click',function(){var target=$($(this).data('target'));var frame=wp.media({title:'Choose hero image',button:{text:'Use image'},multiple:false});frame.on('select',function(){target.val(frame.state().get('selection').first().toJSON().url)});frame.open()})});
+	jQuery(function($){$('.srs-upload-image').on('click',function(){var target=$($(this).data('target'));var frame=wp.media({title:'Choose hero image',button:{text:'Use image'},multiple:false});frame.on('select',function(){target.val(frame.state().get('selection').first().toJSON().url);target[0].dispatchEvent(new Event('change',{bubbles:true}))});frame.open()})});
 	</script>
 	<?php
 }
 
 function srs_home_admin_assets( $hook ) {
-	if ( 'appearance_page_srs-home-sections' === $hook ) {
+	if ( in_array( $hook, array( 'appearance_page_srs-home-sections', 'toplevel_page_srs-home-sections' ), true ) ) {
 		wp_enqueue_media();
 		wp_enqueue_script( 'jquery' );
+		wp_enqueue_style( 'srs-home-editor', get_theme_file_uri( 'assets/css/home-editor.css' ), array(), filemtime( get_theme_file_path( 'assets/css/home-editor.css' ) ) );
+		wp_enqueue_script( 'srs-home-editor', get_theme_file_uri( 'assets/js/home-editor.js' ), array(), filemtime( get_theme_file_path( 'assets/js/home-editor.js' ) ), true );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'srs_home_admin_assets' );

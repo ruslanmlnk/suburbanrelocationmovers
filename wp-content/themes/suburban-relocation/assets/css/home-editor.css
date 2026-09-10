@@ -1,0 +1,12 @@
+.srs-home-admin .srs-section-nav{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 16px}
+.srs-section-nav a{padding:10px 16px;border:1px solid #c3c4c7;border-radius:6px;text-decoration:none;background:#fff;color:#1d2327;font-weight:600}
+.srs-section-nav a[aria-current]{background:#135e96;color:#fff;border-color:#135e96}
+.srs-section-nav a:focus-visible{outline:2px solid #135e96;outline-offset:3px}
+.srs-home-admin .srs-admin-sections{display:block;max-width:850px;margin-top:0}
+.srs-home-admin .srs-admin-sections section{margin-bottom:18px}
+.srs-home-admin .srs-admin-sections section[hidden]{display:none}
+.srs-home-admin .srs-admin-field textarea{min-height:100px;resize:vertical}
+.srs-save-bar{position:sticky;bottom:0;display:flex;align-items:center;gap:20px;padding:14px 20px;background:#fff;border:1px solid #c3c4c7;box-shadow:0 -3px 12px #00000008;z-index:10;max-width:808px}
+.srs-save-bar .submit{margin:0;padding:0}
+.srs-save-status{color:#805500}
+@media(max-width:600px){.srs-section-nav a{padding:9px 12px}.srs-home-admin .srs-media-row{flex-wrap:wrap}.srs-save-bar{padding:12px;gap:12px}}

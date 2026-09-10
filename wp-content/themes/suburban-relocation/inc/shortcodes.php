@@ -123,7 +123,7 @@ function srs_quote_form_shortcode( $atts ) {
 				<p><?php echo esc_html( $atts['text'] ); ?></p>
 			</div>
 			<?php if ( $error ) : ?><p class="srs-form-error" role="alert"><?php esc_html_e( 'Please enter a phone number.', 'suburban-relocation' ); ?></p><?php endif; ?>
-			<form class="srs-quote-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+			<form class="srs-quote-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-ajax-url="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post">
 				<input type="hidden" name="action" value="srs_submit_quote">
 				<input type="hidden" name="source_url" value="<?php echo esc_url( srs_current_url() ); ?>">
 				<?php wp_nonce_field( 'srs_quote_request', 'srs_quote_nonce' ); ?>
@@ -136,6 +136,7 @@ function srs_quote_form_shortcode( $atts ) {
 					<label><span><?php esc_html_e( 'Moving from', 'suburban-relocation' ); ?> <small><?php esc_html_e( '(optional)', 'suburban-relocation' ); ?></small></span><input name="moving_from" autocomplete="postal-code" placeholder="<?php esc_attr_e( 'Origin ZIP', 'suburban-relocation' ); ?>"></label>
 					<label><span><?php esc_html_e( 'Moving to', 'suburban-relocation' ); ?> <small><?php esc_html_e( '(optional)', 'suburban-relocation' ); ?></small></span><input name="moving_to" autocomplete="postal-code" placeholder="<?php esc_attr_e( 'Destination ZIP', 'suburban-relocation' ); ?>"></label>
 				</div>
+				<p class="srs-quote-feedback" role="status" aria-live="polite" tabindex="-1" hidden></p>
 				<button class="srs-button srs-form-submit" type="submit"><?php echo esc_html( $atts['button'] ); ?> <?php echo srs_icon( 'arrow-right' ); ?></button>
 				<p class="srs-form-note"><?php echo srs_icon( 'shield-check' ); ?> <?php esc_html_e( 'Your information stays private and secure.', 'suburban-relocation' ); ?></p>
 			</form>
