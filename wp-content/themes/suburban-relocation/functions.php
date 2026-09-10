@@ -76,7 +76,7 @@ add_action( 'after_setup_theme', 'srs_theme_setup' );
 
 /** Load front-end assets. */
 function srs_enqueue_assets() {
-	wp_enqueue_style( 'srs-theme', get_template_directory_uri() . '/assets/css/theme.css', array(), SRS_THEME_VERSION );
+	wp_enqueue_style( 'srs-theme', get_template_directory_uri() . '/assets/css/theme.css', array(), filemtime( get_theme_file_path( 'assets/css/theme.css' ) ) );
 	wp_enqueue_script( 'srs-theme', get_template_directory_uri() . '/assets/js/theme.js', array(), SRS_THEME_VERSION, true );
 	wp_enqueue_script( 'srs-quote-forms', get_theme_file_uri( 'assets/js/quote-forms.js' ), array(), filemtime( get_theme_file_path( 'assets/js/quote-forms.js' ) ), true );
 }

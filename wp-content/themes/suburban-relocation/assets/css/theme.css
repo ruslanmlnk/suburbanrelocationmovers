@@ -222,11 +222,11 @@ p { margin-top: 0; }
 .srs-form-heading > p:last-child, .srs-form-success > p:last-child { margin: 0; color: #667587; font-size: 14px; line-height: 1.55; }
 .srs-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 12px; }
 .srs-quote-card.is-compact .srs-form-grid { grid-template-columns: 1fr; gap: 12px; }
-.srs-form-grid label { min-width: 0; color: #33465b; font-size: 13px; font-weight: 800; }
-.srs-form-grid label > span { display: block; }
+.srs-form-grid label { display: flex; flex-direction: column; min-width: 0; color: #33465b; font-size: 13px; font-weight: 800; }
+.srs-form-grid label > span { display: block; flex: 1; }
 .srs-form-grid small { color: #7c8896; font-size: 10px; font-weight: 700; }
 .srs-form-grid small.required { color: #d9413b; }
-.srs-form-grid input { display: block; width: 100%; height: 49px; margin-top: 7px; padding: 0 13px; border: 1px solid #d6dfe8; border-radius: 10px; outline: 0; background: #f9fafc; color: var(--srs-ink); font-size: 14px; box-shadow: none; }
+.srs-form-grid input { display: block; flex-shrink: 0; width: 100%; height: 49px; margin-top: 7px; padding: 0 13px; border: 1px solid #d6dfe8; border-radius: 10px; outline: 0; background: #f9fafc; color: var(--srs-ink); font-size: 14px; box-shadow: none; }
 .srs-form-grid input:focus { border-color: var(--srs-blue); background: #fff; box-shadow: 0 0 0 3px rgba(31, 95, 157, .12); }
 .srs-form-submit { width: 100%; margin-top: 17px; border-radius: 10px; }
 .srs-form-note { margin: 10px 0 0; color: #8190a0; font-size: 11px; text-align: center; }
