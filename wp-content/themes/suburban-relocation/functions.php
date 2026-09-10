@@ -14,9 +14,11 @@ define( 'SRS_THEME_VERSION', '1.2.1' );
 /** Replace the former OSPanel origin in imported editable content on production. */
 function srs_replace_local_origin( $value ) {
 	if ( ! is_string( $value ) ) return $value;
-	return str_replace(
-		array( 'http://suburbanrelocationmovers', 'https://suburbanrelocationmovers' ),
-		rtrim( home_url(), '/' ),
+	// Match the complete local hostname, never the prefix of the production domain.
+	// One pass also prevents a replacement URL from being replaced a second time.
+	return preg_replace_callback(
+		'~https?://suburbanrelocationmovers(?=[/?#\s\x22\x27<>]|$)~i',
+		function() { return rtrim( home_url(), '/' ); },
 		$value
 	);
 }
