@@ -82,6 +82,21 @@ function srs_enqueue_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'srs_enqueue_assets' );
 
+/** Google Analytics 4 on all public-facing theme pages. */
+function srs_google_analytics() {
+	?>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVEZM5P33M"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-YVEZM5P33M');
+	</script>
+	<?php
+}
+add_action( 'wp_head', 'srs_google_analytics', 1 );
+
 /** Add useful body classes. */
 function srs_body_classes( $classes ) {
 	if ( is_singular( array( 'srs_service', 'srs_location', 'srs_city' ) ) ) {
